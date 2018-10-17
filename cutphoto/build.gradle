@@ -1,0 +1,47 @@
+apply plugin: 'com.android.library'
+//
+//publish {
+//    userOrg = '夏君' // bintray 上注册的用户名
+//    groupId = 'com.xj.cutphoto'// 包名
+//    artifactId = 'cutphoto' // library名
+//    publishVersion = '1.0.1' // 版本号
+//    desc = 'test up demo'
+//    website = 'https://github.com/dfqin/jcenterDemo'
+//}
+//剪切图片
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        debug {
+            buildConfigField("boolean", "isDebug", "true") // 定义 isdubug 的值
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            buildConfigField("boolean", "isDebug", "false") // 定义 isdubug 的值
+            minifyEnabled rootProject.ext.minifyEnabled
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            consumerProguardFiles  'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:23.+'
+    testCompile 'junit:junit:4.12'
+}

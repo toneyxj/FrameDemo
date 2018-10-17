@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="default_title_color">#24CF5F</color>
+    <!--字体红颜色-->
+    <color name="red_back">#cc737a</color>
+    <!-- 透明 -->
+    <color name="transparency">#00000000</color>
+    <!-- 透明灰色-->
+    <color name="trans_gray">#B2404040 </color>
+    <color name="white">#ffffff </color>
+
+    <color name="font_1">#333333</color>
+    <!-- 一级 -->
+    <color name="font_2">#666666</color>
+    <!-- 二级 -->
+    <color name="font_3">#999999</color>
+    <!-- 三级 -->
+    <color name="black">#000</color>
+    <!-- -自己找的背景 -->
+    <color name="click_background">#e6e6e6</color>
+    <color name="back_color">#24CF5F</color>
+    <color name="back_gray">#848484</color>
+    <!-- 深一点的线-->
+    <color name="black_cut_line">#c2c2c2</color>
+    <!-- 浅一点的线-->
+    <color name="black_cut_line_light">#dbdbdb</color>
+
+</resources>

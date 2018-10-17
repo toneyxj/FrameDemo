@@ -1,0 +1,41 @@
+apply plugin: 'com.android.library'
+//主框架控制各个分框架
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion  rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        debug {
+            buildConfigField("boolean", "isDebug", "true") // 定义 isdubug 的值
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            buildConfigField("boolean", "isDebug", "false") // 定义 isdubug 的值
+            minifyEnabled rootProject.ext.minifyEnabled
+//            consumerProguardFiles  'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:23.+'
+    testCompile 'junit:junit:4.12'
+    compile project(':applypermission')
+    compile project(':cutphoto')
+
+//    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+//    compile 'com.jakewharton:butterknife:7.0.1'
+}
