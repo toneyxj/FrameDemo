@@ -2,12 +2,13 @@
 
 buildscript {
     repositories {
+        mavenCentral()
         jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.2'
 
-        classpath 'com.novoda:bintray-release:0.5.0'
+        classpath 'com.novoda:bintray-release:0.8.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -28,5 +29,12 @@ ext {
     targetSdkVersion = 23
     compileSdkVersion = 27
     buildToolsVersion = '23.0.3'
-    minifyEnabled = true
+    minifyEnabled = false
+
+    userOrg = '13110209091' //用户名
+    repoName = "twoTestDemo" //仓库名
+    groupId = 'com.xj.cutphoto'
+    website = 'https://github.com/toneyxj/FrameDemo' //地址，填写真实可访问地址 l
+    licences = ['Apache-2.0'] // 描述，填写licences
+
 }

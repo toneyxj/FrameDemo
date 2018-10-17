@@ -1,18 +1,28 @@
 apply plugin: 'com.android.library'
-//
-//publish {
-//    userOrg = '夏君' // bintray 上注册的用户名
-//    groupId = 'com.xj.cutphoto'// 包名
-//    artifactId = 'cutphoto' // library名
-//    publishVersion = '1.0.1' // 版本号
-//    desc = 'test up demo'
-//    website = 'https://github.com/dfqin/jcenterDemo'
-//}
+
+apply plugin: 'com.novoda.bintray-release'
+publish {
+    artifactId = 'annotation' //你的library的名字，对应com.squareup.okhttp3:okhttp:3.4.1中的okhttp
+//    uploadName = 'AndroidCommonUtils' // 展示名字
+    publishVersion = '1.0.0' // 版本
+    userOrg = rootProject.ext.userOrg
+    groupId = rootProject.ext.groupId//你的唯一的groupId，对应com.squareup.okhttp3:okhttp:3.4.1中的com.squareup.okhttp3
+    desc = "test demo"
+    website = rootProject.ext.website//建议填写github地址，不过不影响，这里做演示填的自己的网址
+    licences = rootProject.ext.licences
+
+    bintrayUser="13110209091"
+    bintrayKey = 'ae2f0673a555cab7e70e369606b2f5f8bcc1ff07'
+
+}
+//gradlew clean build bintrayUpload -PdryRun=false
 //剪切图片
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-
+    lintOptions {
+        abortOnError false
+    }
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
@@ -44,4 +54,13 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:23.+'
     testCompile 'junit:junit:4.12'
+}
+publish {
+    userOrg = '13110209091'                                  //bintray.com用户名
+    groupId = 'com.xj.cutphoto'                           //jcenter上的路径
+    artifactId = 'cutphoto'                          //项目名称
+    publishVersion = '1.0.0'                                //版本号
+    desc = 'cutphoto test'
+    website = 'https://github.com/toneyxj/FrameDemo'
+    licences = ['Apache-2.0'] // 描述，填写licences
 }
