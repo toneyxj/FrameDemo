@@ -8,7 +8,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.2'
 
-        classpath 'com.novoda:bintray-release:0.8.0'
+        classpath 'com.novoda:bintray-release:0.3.4'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -17,6 +17,14 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven{url "https://jitpack.io"}
+        mavenCentral()
+    }
+    tasks.withType(Javadoc) {
+        options{ encoding "UTF-8"
+                    charSet 'UTF-8'
+                    links "http://docs.oracle.com/javase/7/docs/api"
+                }
     }
 }
 
@@ -34,6 +42,7 @@ ext {
     userOrg = '13110209091' //用户名
     repoName = "twoTestDemo" //仓库名
     groupId = 'com.xj.cutphoto'
+    publishVersion = '1.0.0'
     website = 'https://github.com/toneyxj/FrameDemo' //地址，填写真实可访问地址 l
     licences = ['Apache-2.0'] // 描述，填写licences
 

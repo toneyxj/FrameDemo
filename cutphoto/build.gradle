@@ -2,19 +2,19 @@ apply plugin: 'com.android.library'
 
 apply plugin: 'com.novoda.bintray-release'
 publish {
-    artifactId = 'annotation' //你的library的名字，对应com.squareup.okhttp3:okhttp:3.4.1中的okhttp
-//    uploadName = 'AndroidCommonUtils' // 展示名字
-    publishVersion = '1.0.0' // 版本
-    userOrg = rootProject.ext.userOrg
-    groupId = rootProject.ext.groupId//你的唯一的groupId，对应com.squareup.okhttp3:okhttp:3.4.1中的com.squareup.okhttp3
+    artifactId = 'cutphoto' //你的library的名字，对应com.squareup.okhttp3:okhttp:3.4.1中的okhttp
+    repoName  = rootProject.repoName // maven仓库名称，默认就是maven
+    publishVersion = '1.0.2' // 版本
+    userOrg = rootProject.userOrg
+    groupId = rootProject.groupId//你的唯一的groupId，对应com.squareup.okhttp3:okhttp:3.4.1中的com.squareup.okhttp3
     desc = "test demo"
-    website = rootProject.ext.website//建议填写github地址，不过不影响，这里做演示填的自己的网址
-    licences = rootProject.ext.licences
+    website = rootProject.website//建议填写github地址，不过不影响，这里做演示填的自己的网址
+    licences = rootProject.licences
 
     bintrayUser="13110209091"
     bintrayKey = 'ae2f0673a555cab7e70e369606b2f5f8bcc1ff07'
-
 }
+//gradlew clean build bintrayUpload -PbintrayUser=13110209091  -PbintrayKey=ae2f0673a555cab7e70e369606b2f5f8bcc1ff07  -PdryRun=false
 //gradlew clean build bintrayUpload -PdryRun=false
 //剪切图片
 android {
@@ -46,7 +46,18 @@ android {
         }
     }
 }
-
+allprojects {
+    repositories {
+        jcenter()
+    }
+    //加上这些
+    tasks.withType(Javadoc) {
+        options{ encoding "UTF-8"
+            charSet 'UTF-8'
+            links "http://docs.oracle.com/javase/7/docs/api"
+        }
+    }
+}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -55,12 +66,12 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.+'
     testCompile 'junit:junit:4.12'
 }
-publish {
-    userOrg = '13110209091'                                  //bintray.com用户名
-    groupId = 'com.xj.cutphoto'                           //jcenter上的路径
-    artifactId = 'cutphoto'                          //项目名称
-    publishVersion = '1.0.0'                                //版本号
-    desc = 'cutphoto test'
-    website = 'https://github.com/toneyxj/FrameDemo'
-    licences = ['Apache-2.0'] // 描述，填写licences
-}
+//publish {
+//    userOrg = '13110209091'                                  //bintray.com用户名
+//    groupId = 'com.xj.cutphoto'                           //jcenter上的路径
+//    artifactId = 'cutphoto'                          //项目名称
+//    publishVersion = '1.0.0'                                //版本号
+//    desc = 'cutphoto test'
+//    website = 'https://github.com/toneyxj/FrameDemo'
+//    licences = ['Apache-2.0'] // 描述，填写licences
+//}
