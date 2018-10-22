@@ -13,7 +13,7 @@ publish {
 
     bintrayUser="13110209091"
     bintrayKey = 'ae2f0673a555cab7e70e369606b2f5f8bcc1ff07'
-    //测试
+    //测试11
 }
 //gradlew clean build bintrayUpload -PbintrayUser=13110209091  -PbintrayKey=ae2f0673a555cab7e70e369606b2f5f8bcc1ff07  -PdryRun=false
 //gradlew clean build bintrayUpload -PdryRun=false
