@@ -3,6 +3,7 @@
     package="com.xj.framedemo">
 
     <application
+        android:name=".ObjApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,6 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".testrefuresh.TestOneActivity" />
+        <activity
+            android:name=".testrefuresh.ScrollingActivity"
+            android:label="@string/title_activity_scrolling"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".testrefuresh.TestTwoActivity"></activity>
     </application>
 
 </manifest>

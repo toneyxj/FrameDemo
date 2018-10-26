@@ -1,7 +1,12 @@
 package com.xj.framedemo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+
+import com.xj.framedemo.testrefuresh.TestTwoActivity;
+import com.xj.mainframe.listener.XJOnClickListener;
 
 public class MainActivity extends Activity {
 
@@ -29,6 +34,12 @@ public class MainActivity extends Activity {
 ////                ((Button)findViewById(R.id.click)).setTextColor(getResources().getColor(R.color.colorAccent));
 //            }
 //        });
+        (findViewById(R.id.click)).setOnClickListener(new XJOnClickListener() {
+            @Override
+            public void onclickView(View view) {
+                startActivity(new Intent(MainActivity.this, TestTwoActivity.class));
+            }
+        });
     }
 
     /**

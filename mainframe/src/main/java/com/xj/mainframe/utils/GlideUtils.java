@@ -2,6 +2,7 @@ package com.xj.mainframe.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -71,8 +72,8 @@ public class GlideUtils {
      * @param imgUrl  图片地址
      * @param isFade  是否需要动画
      */
-    public void loadImage(Context context, ImageView imageView,
-                          String imgUrl, boolean isFade) {
+    public void loadImage(@NonNull Context context, @NonNull ImageView imageView,
+                          @NonNull String imgUrl, boolean isFade) {
         if (isFade) {
             Glide.with(context)
                     .load(imgUrl)

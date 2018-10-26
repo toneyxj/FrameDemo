@@ -4,10 +4,6 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:context="com.xj.framedemo.MainActivity">
 
@@ -60,4 +56,9 @@
                 android:text="测试button88888"/>
         </LinearLayout>
     </com.xj.mainframe.view.extendView.AlphaLinerLayout>
+    <com.xj.mainframe.view.otherView.TitleView
+        android:layout_width="match_parent"
+        android:background="@drawable/white"
+        android:layout_height="@dimen/title_dp">
+    </com.xj.mainframe.view.otherView.TitleView>
 </LinearLayout>

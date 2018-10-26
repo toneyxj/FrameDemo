@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/applypermission/applypermission.iml" filepath="$PROJECT_DIR$/applypermission/applypermission.iml" />
       <module fileurl="file://$PROJECT_DIR$/cutphoto/cutphoto.iml" filepath="$PROJECT_DIR$/cutphoto/cutphoto.iml" />
       <module fileurl="file://$PROJECT_DIR$/mainframe/mainframe.iml" filepath="$PROJECT_DIR$/mainframe/mainframe.iml" />
+      <module fileurl="file://$PROJECT_DIR$/refuresh_layout/refuresh_layout.iml" filepath="$PROJECT_DIR$/refuresh_layout/refuresh_layout.iml" />
     </modules>
   </component>
 </project>

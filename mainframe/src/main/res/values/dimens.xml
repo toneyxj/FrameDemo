@@ -22,6 +22,8 @@
     <dimen name="sp10">10sp</dimen>
     <dimen name="dp50">50dp</dimen>
     <dimen name="default_button_height">42dp</dimen>
+    <dimen name="title_size">20dp</dimen>
+    <dimen name="title_right_size">16dp</dimen>
     <dimen name="title_dp">50dp</dimen>
     <dimen name="line_1dp">0.5dp</dimen>
 </resources>

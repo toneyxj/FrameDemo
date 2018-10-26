@@ -20,4 +20,9 @@ public class XJTextView extends TextView {
     public XJTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
+
+    public void setTextV(CharSequence text) {
+        if (null == text) return;
+        setText(text);
+    }
 }

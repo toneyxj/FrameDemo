@@ -1,1 +1,1 @@
-include ':app', ':applypermission', ':cutphoto', ':mainframe'
+include ':app', ':applypermission', ':cutphoto', ':mainframe', ':refuresh_layout'
