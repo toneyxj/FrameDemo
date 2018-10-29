@@ -39,6 +39,7 @@ ext {
     buildToolsVersion = '23.0.3'
     minifyEnabled = false
 
+
     userOrg = '13110209091' //用户名
     repoName = "twoTestDemo" //仓库名
     groupId = 'com.xj.cutphoto'

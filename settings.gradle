@@ -1,1 +1,1 @@
-include ':app', ':applypermission', ':cutphoto', ':mainframe', ':refuresh_layout'
+include ':app', ':applypermission', ':cutphoto', ':mainframe', ':refuresh_layout', ':X5WebDemo', ':x5web'

@@ -6,25 +6,50 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 
+import com.xj.mainframe.configer.APPLog;
+
+import java.util.ArrayList;
+
 /**
  * 网络状态监听管理
  * Created by xj on 2018/9/14.
  */
 public class NetWorkStateUtil {
+    private static NetWorkStateUtil instatnce = null;
+
+    public static NetWorkStateUtil getInstance(Context context) {
+        if (instatnce == null) {
+            synchronized (NetWorkStateUtil.class) {
+                if (instatnce == null) {
+                    instatnce = new NetWorkStateUtil(context);
+                }
+            }
+        }
+        return instatnce;
+    }
     private final static String ANDROID_NET_CHANGE_ACTION = ConnectivityManager.CONNECTIVITY_ACTION;//"android.net.conn.CONNECTIVITY_CHANGE";
     private  Boolean networkAvailable = false;
     private  NetWorkUtil.netType netType;
-    private NetChangeObserver observer;
+    private ArrayList<NetChangeObserver> netObsers=new ArrayList<>();     //存放观察者引用的数组线性表
+    private Context context;
+    private long registerTime;
 
-    public NetWorkStateUtil(Context context,NetChangeObserver observer) {
-        this.observer = observer;
-
+    public  NetWorkStateUtil(Context context ) {
+        registerTime=System.currentTimeMillis();
+        this.context=context.getApplicationContext();
         IntentFilter filter = new IntentFilter();
-        //filter.addAction(TA_ANDROID_NET_CHANGE_ACTION);
         filter.addAction(ANDROID_NET_CHANGE_ACTION);
-        context.registerReceiver(receiver, filter);
+        this.context.registerReceiver(receiver, filter);
     }
 
+    /**
+     * 清空监听
+     */
+    public void clearObsers(){
+        netObsers.clear();
+        unregisterNetReceiver();
+        instatnce=null;
+    }
     /**
      * 判断是否有网络连接
      * @return
@@ -45,33 +70,49 @@ public class NetWorkStateUtil {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equalsIgnoreCase(ANDROID_NET_CHANGE_ACTION)) {
-                // TALogger.i(NetworkStateReceiver.this, "网络状态改变.");
-                if (!NetWorkUtil.isNetworkAvailable(context)) {
-                    // TALogger.i(NetworkStateReceiver.this, "没有网络连接.");
+                if (!NetWorkUtil.isNetworkConnected(context)) {
                     networkAvailable = false;
                 } else {
-                    // TALogger.i(NetworkStateReceiver.this, "网络连接成功.");
                     netType = NetWorkUtil.getAPNType(context);
                     networkAvailable = true;
                 }
-                if (observer==null)return;
-                if (networkAvailable){
-                    observer.onConnect(netType);
-                }else {
-                    observer.onDisConnect();
-                }
+                notifyObserver();
             }
         }
     };
+
+    public void registerObserver(NetChangeObserver observer) {
+            if (!netObsers.contains(observer))netObsers.add(observer);
+    }
+
+    public void removeObserver(NetChangeObserver observer) {
+        netObsers.remove(observer);
+    }
+
+    public void notifyObserver() {
+        long tt=System.currentTimeMillis();
+        if (Math.abs(tt-registerTime)<=500) {
+            APPLog.d("notifyObserver","first register delayed 500 millisecond");
+            return;
+        }
+        int size=netObsers.size();
+        for (int i = 0; i <size ; i++) {
+            if (networkAvailable){
+                netObsers.get(i).onConnect(netType);
+            }else {
+                netObsers.get(i).onDisConnect();
+            }
+
+        }
+    }
     /**
      * 注销网络状态广播
      */
-    public  void unregisterNetReceiver(Context mContext) {
-            try {
-                mContext.unregisterReceiver(receiver);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    public  void unregisterNetReceiver() {
+        try {
+            context.unregisterReceiver(receiver);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
+    }
 }

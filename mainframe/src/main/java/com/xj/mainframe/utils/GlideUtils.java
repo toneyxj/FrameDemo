@@ -8,11 +8,15 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.xj.mainframe.R;
 import com.xj.mainframe.utils.glide.CropCircleTransformation;
 import com.xj.mainframe.utils.glide.GrayscaleTransformation;
 import com.xj.mainframe.utils.glide.RoundedCornersTransformation;
+import com.xj.mainframe.utils.okGlideProgress.okInterceptor.ProgressInterceptor;
 
 
 /**
@@ -63,7 +67,7 @@ public class GlideUtils {
      */
     public void loadImage(Context context, ImageView imageView,
                           String imgUrl) {
-        loadImage(context,imageView,imgUrl,false);
+        loadImage(context,imageView,imgUrl,true);
     }
     /**
      * 常规加载图片
@@ -73,7 +77,7 @@ public class GlideUtils {
      * @param isFade  是否需要动画
      */
     public void loadImage(@NonNull Context context, @NonNull ImageView imageView,
-                          @NonNull String imgUrl, boolean isFade) {
+                          @NonNull final String imgUrl, boolean isFade) {
         if (isFade) {
             Glide.with(context)
                     .load(imgUrl)
@@ -83,13 +87,25 @@ public class GlideUtils {
                     //all:缓存源资源和转换后的资源 none:不作任何磁盘缓存
                     //source:缓存源资源   result：缓存转换后的资源
                     .diskCacheStrategy(DiskCacheStrategy.ALL) //缓存策略
-                    .into(imageView);
+                    .into(new GlideDrawableImageViewTarget(imageView){
+                        @Override
+                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                            super.onResourceReady(resource, animation);
+                            ProgressInterceptor.removeListener(imgUrl);
+                        }
+                    });
         } else {
             Glide.with(context)
                     .load(imgUrl)
                     .error(R.drawable.pic_fail)
                     .diskCacheStrategy(DiskCacheStrategy.ALL) //缓存策略
-                    .into(imageView);
+                    .into(new GlideDrawableImageViewTarget(imageView){
+                        @Override
+                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                            super.onResourceReady(resource, animation);
+                            ProgressInterceptor.removeListener(imgUrl);
+                        }
+                    });
         }
     }
 

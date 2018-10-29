@@ -1,19 +1,3 @@
-/*
- * Copyright 2016 czy1121
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xj.mainframe.view.otherView;
 
 import android.app.Activity;
@@ -33,13 +17,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xj.mainframe.R;
+import com.xj.mainframe.view.listener.LoadingInterface;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
 
-public class LoadingLayout extends FrameLayout {
+public class LoadingLayout extends FrameLayout implements LoadingInterface {
     public interface OnInflateListener {
         void onInflate(View inflated);
     }
@@ -215,41 +200,43 @@ public class LoadingLayout extends FrameLayout {
         return this;
     }
 
+    @Override
+    public void setListener(OnClickListener listener) {
+        setRetryListener(listener);
+    }
 
-//    public LoadingLayout setTextColor(@ColorInt int color) {
-//        mTextColor = color;
-//        return this;
-//    }
-//    public LoadingLayout setTextSize(@ColorInt int dp) {
-//        mTextColor = dp2px(dp);
-//        return this;
-//    }
-//    public LoadingLayout setButtonTextColor(@ColorInt int color) {
-//        mButtonTextColor = color;
-//        return this;
-//    }
-//    public LoadingLayout setButtonTextSize(@ColorInt int dp) {
-//        mButtonTextColor = dp2px(dp);
-//        return this;
-//    }
-//    public LoadingLayout setButtonBackground(Drawable drawable) {
-//        mButtonBackground = drawable;
-//        return this;
-//    }
-
+    @Override
     public void showLoading() {
         show(mLoadingResId);
     }
 
+    @Override
+    public void showError( String value, String text) {
+        if (null!=value&&!value.isEmpty())
+            setErrorText(value);
+        if (null!=text&&!text.isEmpty())
+            setRetryText(text);
+        showError();
+    }
+
+    @Override
     public void showEmpty() {
         show(mEmptyResId);
     }
 
+    @Override
+    public void showEmpty( String value) {
+        if (null!=value&&!value.isEmpty())
+            setEmptyText(value);
+        showEmpty();
+    }
+
+    @Override
     public void showError() {
         show(mErrorResId);
     }
-
-    private void showContent() {
+    @Override
+    public void showContent() {
         show(mContentId);
     }
     public void hideLayout(){
@@ -283,7 +270,7 @@ public class LoadingLayout extends FrameLayout {
 
         if (layoutId == mEmptyResId) {
             ImageView img = (ImageView) layout.findViewById(R.id.empty_image);
-            if (img != null) {
+            if (img != null&&mEmptyImage!=NO_ID) {
                 img.setImageResource(mEmptyImage);
             }
             TextView view = (TextView) layout.findViewById(R.id.empty_text);
@@ -297,7 +284,7 @@ public class LoadingLayout extends FrameLayout {
             }
         } else if (layoutId == mErrorResId) {
             ImageView img = (ImageView) layout.findViewById(R.id.error_image);
-            if (img != null) {
+            if (img != null&&mErrorImage!=NO_ID) {
                 img.setImageResource(mErrorImage);
             }
             TextView txt = (TextView) layout.findViewById(R.id.error_text);
@@ -311,7 +298,7 @@ public class LoadingLayout extends FrameLayout {
                 btn.setText(mRetryText);
                 btn.setTextColor(mButtonTextColor);
                 btn.setTextSize(TypedValue.COMPLEX_UNIT_PX, mButtonTextSize);
-                btn.setBackground(mButtonBackground);
+                btn.setBackgroundDrawable(mButtonBackground);
                 btn.setOnClickListener(mRetryButtonClickListener);
             }
             if (mOnErrorInflateListener != null) {

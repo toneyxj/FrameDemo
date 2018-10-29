@@ -60,5 +60,9 @@
         android:layout_width="match_parent"
         android:background="@drawable/white"
         android:layout_height="@dimen/title_dp">
+        <com.xj.mainframe.view.BaseView.XJImageView
+            android:id="@+id/imag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </com.xj.mainframe.view.otherView.TitleView>
 </LinearLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <!-- 轮播效果图对画点的进行引用 -->
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager_pager"
+        android:layout_width="match_parent"
+        android:flipInterval="16"  
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+</merge>

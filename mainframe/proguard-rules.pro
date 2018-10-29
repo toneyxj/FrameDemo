@@ -142,4 +142,7 @@
 }
 ##butterknife-end
 
+#基本框架保持代码
+-keep class com.xj.mainframe.**{*;}
+
 -ignorewarnings

@@ -41,6 +41,7 @@ public class ToastUtils {
         bottomHeight= (int) (DensityUtil.getScreenH(context)*0.1);
         if (bottomHeight<=0)bottomHeight=108;
         initToastView(context);
+
     }
 
     /**

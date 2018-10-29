@@ -17,30 +17,6 @@ public class NetWorkUtil
 	}
 
 	/**
-	 * 网络是否可用
-	 * 
-	 * @param context
-	 * @return
-	 */
-	public static boolean isNetworkAvailable(Context context)
-	{
-		ConnectivityManager mgr = (ConnectivityManager) context
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo[] info = mgr.getAllNetworkInfo();
-		if (info != null)
-		{
-			for (int i = 0; i < info.length; i++)
-			{
-				if (info[i].getState() == NetworkInfo.State.CONNECTED)
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * 判断是否有网络连接
 	 * 
 	 * @param context
@@ -71,16 +47,10 @@ public class NetWorkUtil
 	public static boolean isWifiConnected(Context context)
 	{
 		if (context != null)
-		{
-			ConnectivityManager mConnectivityManager = (ConnectivityManager) context
-					.getSystemService(Context.CONNECTIVITY_SERVICE);
-			NetworkInfo mWiFiNetworkInfo = mConnectivityManager
-					.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-			if (mWiFiNetworkInfo != null)
+			if (getConnectedType(context) == ConnectivityManager.TYPE_WIFI)
 			{
-				return mWiFiNetworkInfo.isAvailable();
+				return true;
 			}
-		}
 		return false;
 	}
 
@@ -93,16 +63,10 @@ public class NetWorkUtil
 	public static boolean isMobileConnected(Context context)
 	{
 		if (context != null)
-		{
-			ConnectivityManager mConnectivityManager = (ConnectivityManager) context
-					.getSystemService(Context.CONNECTIVITY_SERVICE);
-			NetworkInfo mMobileNetworkInfo = mConnectivityManager
-					.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-			if (mMobileNetworkInfo != null)
+			if (getConnectedType(context) == ConnectivityManager.TYPE_MOBILE)
 			{
-				return mMobileNetworkInfo.isAvailable();
+				return true;
 			}
-		}
 		return false;
 	}
 
@@ -148,7 +112,6 @@ public class NetWorkUtil
 			return netType.noneNet;
 		}
 		int nType = networkInfo.getType();
-
 		if (nType == ConnectivityManager.TYPE_MOBILE)
 		{
 			if (networkInfo.getExtraInfo().toLowerCase().equals("cmnet"))

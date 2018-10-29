@@ -15,6 +15,7 @@ import com.xj.mainframe.adapter.BaseRecyclerAdapter;
 import com.xj.mainframe.adapter.SmartViewHolder;
 import com.xj.mainframe.base.SmartLayoutUtils;
 import com.xj.mainframe.base.activity.BaseActivity;
+import com.xj.mainframe.configer.APPLog;
 import com.xj.mainframe.configer.ToastUtils;
 import com.xj.mainframe.utils.StatusBarUtil;
 import com.xj.mainframe.view.otherView.TitleView;
@@ -30,12 +31,13 @@ public class TestTwoActivity extends BaseActivity {
     private SmartRefreshLayout refreshLayout;
     private SmartLayoutUtils layoutUtils;
     private BaseRecyclerAdapter<TestTwoActivity.Model> mAdapter;
+
     @Override
     public void initActivity(Bundle savedInstanceState) {
         //状态栏透明和间距处理
         StatusBarUtil.darkMode(this);
         initView();
-
+        APPLog.e("mMainThreadid 22",android.os.Process.myTid());
         layoutUtils=new SmartLayoutUtils(refreshLayout, new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
