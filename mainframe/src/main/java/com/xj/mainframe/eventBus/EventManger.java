@@ -1,5 +1,7 @@
 package com.xj.mainframe.eventBus;
 
+import android.os.Handler;
+
 import com.xj.mainframe.configer.APPLog;
 
 import java.util.HashMap;
@@ -12,6 +14,7 @@ import java.util.Map;
 public class EventManger {
     // 初始化类实列
     private static EventManger instatnce = null;
+    private Handler handler=new Handler();
 
     /**
      * 获得软键盘弹出类实列
@@ -63,11 +66,16 @@ public class EventManger {
      * @param code
      * @param obj
      */
-    public synchronized void notifiyCode(int code,Object obj){
-        EventObserver observer= events.get(code);
-        if (observer!=null){
-            observer.eventUpdate(code,obj);
-        }
+    public synchronized void notifiyCode(final int code, final Object obj){
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                EventObserver observer= events.get(code);
+                if (observer!=null){
+                    observer.eventUpdate(code,obj);
+                }
+            }
+        });
     }
 
 
