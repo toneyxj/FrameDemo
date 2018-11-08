@@ -10,8 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.xj.framedemo.MainActivity;
 import com.xj.framedemo.R;
 import com.xj.framedemo.TestRequest;
 import com.xj.framedemo.modelList.ModelUtils;
@@ -21,6 +23,7 @@ import com.xj.mainframe.base.BaseUtils;
 import com.xj.mainframe.base.SmartLayoutUtils;
 import com.xj.mainframe.configer.APPLog;
 import com.xj.mainframe.configer.ToastUtils;
+import com.xj.mainframe.eventBus.EventManger;
 import com.xj.mainframe.listener.HandlerMessageInterface;
 import com.xj.refuresh.SmartRefreshLayout;
 import com.xj.refuresh.api.RefreshLayout;
@@ -108,6 +111,18 @@ public class TestFragment extends Fragment implements HandlerMessageInterface{
                 testRequest.testRequest();
             }
         },3000);
+        mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                hander.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        EventManger.getInstance().notifiyCode(MainActivity.mainE,position);
+                    }
+                },3000);
+
+            }
+        });
 
         return view;
     }

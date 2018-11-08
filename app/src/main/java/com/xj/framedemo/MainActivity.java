@@ -1,20 +1,24 @@
 package com.xj.framedemo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.xj.framedemo.testrefuresh.ScrollingActivity;
 import com.xj.mainframe.configer.APPLog;
+import com.xj.mainframe.configer.ToastUtils;
+import com.xj.mainframe.eventBus.EventManger;
+import com.xj.mainframe.eventBus.EventObserver;
 import com.xj.mainframe.listener.XJOnClickListener;
 import com.xj.mainframe.netState.NetChangeObserver;
 import com.xj.mainframe.netState.NetWorkStateUtil;
 import com.xj.mainframe.netState.NetWorkUtil;
 import com.xj.mainframe.view.BaseView.XJImageView;
-import com.xj.mainframe.webX5.BrowserActivity;
 
 import java.util.LinkedList;
 
-public class MainActivity extends Activity implements NetChangeObserver {
+public class MainActivity extends Activity implements NetChangeObserver,EventObserver {
 
     // Used to load the 'native-lib' library on application startup.
     static {
@@ -24,6 +28,8 @@ public class MainActivity extends Activity implements NetChangeObserver {
 //    LinearLayout buttlay;
 //    @Bind(R.id.sample_text)
 //    XJTextView sample_text;
+
+    public static int mainE=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +49,8 @@ public class MainActivity extends Activity implements NetChangeObserver {
         (findViewById(R.id.click)).setOnClickListener(new XJOnClickListener() {
             @Override
             public void onclickView(View view) {
-//                startActivity(new Intent(MainActivity.this, ScrollingActivity.class));
-                BrowserActivity.StartBrowser(MainActivity.this,"http://soft.imtt.qq.com/browser/tes/feedback.html",false);
+                startActivity(new Intent(MainActivity.this, ScrollingActivity.class));
+//                BrowserActivity.StartBrowser(MainActivity.this,"http://soft.imtt.qq.com/browser/tes/feedback.html",false);
             }
         });
 
@@ -58,6 +64,8 @@ public class MainActivity extends Activity implements NetChangeObserver {
         observers.add("就是这么");
         APPLog.e("observers",observers.size());
         NetWorkStateUtil.getInstance(this).registerObserver(this);
+
+        EventManger.getInstance().registerObserver(mainE,this);
     }
 
     /**
@@ -71,6 +79,7 @@ public class MainActivity extends Activity implements NetChangeObserver {
         super.onDestroy();
         NetWorkStateUtil.getInstance(this).removeObserver(this);
 //        ButterKnife.unbind(this);
+        EventManger.getInstance().removeObserver(mainE);
     }
 
     @Override
@@ -81,5 +90,12 @@ public class MainActivity extends Activity implements NetChangeObserver {
     @Override
     public void onDisConnect() {
         APPLog.d("网络连接关闭了");
+    }
+
+    @Override
+    public void eventUpdate(int code, Object data) {
+        if (code==mainE){
+            ToastUtils.getInstance().showToastShort(data.toString());
+        }
     }
 }
