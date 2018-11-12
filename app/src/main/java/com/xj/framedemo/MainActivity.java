@@ -14,6 +14,7 @@ import com.xj.mainframe.listener.XJOnClickListener;
 import com.xj.mainframe.netState.NetChangeObserver;
 import com.xj.mainframe.netState.NetWorkStateUtil;
 import com.xj.mainframe.netState.NetWorkUtil;
+import com.xj.mainframe.utils.Base64Util;
 import com.xj.mainframe.view.BaseView.XJImageView;
 
 import java.util.LinkedList;
@@ -66,6 +67,13 @@ public class MainActivity extends Activity implements NetChangeObserver,EventObs
         NetWorkStateUtil.getInstance(this).registerObserver(this);
 
         EventManger.getInstance().registerObserver(mainE,this);
+
+        String  value="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1540793816775&di" +
+                "=320911c5448aba2c236006c27e8d4024&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Ftj%2F2018-09-27%2F5baca04abc904.jpg";
+
+        String has= Base64Util.encodeData(value);
+        APPLog.e("转换",has );
+        APPLog.e("转换",Base64Util.decodeData(value) );
     }
 
     /**
