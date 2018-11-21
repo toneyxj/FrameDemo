@@ -17,6 +17,7 @@ import com.xj.mainframe.download.utils.DownloadB;
 import com.xj.mainframe.download.utils.DownloadUtil;
 import com.xj.mainframe.utils.SharePreferceUtil;
 import com.xj.mainframe.utils.StringUtils;
+import com.xj.mainframe.utils.SystemUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -50,8 +51,8 @@ public class DownloadManager extends DMBase implements DownloadListener {
 
     public DownloadManager(Context context) {
         this.context = context;
-//        MAX_DOWNLOADS = ((int) (SystemUtils.getCPUCoreNum() * 0.7));
-//        if (MAX_DOWNLOADS < 1) MAX_DOWNLOADS = 1;
+        MAX_DOWNLOADS = ((int) (SystemUtils.getCPUCoreNum() * 0.5));
+        if (MAX_DOWNLOADS < 1) MAX_DOWNLOADS = 1;
         APPLog.e(TAG_MD + "-MAX_DOWNLOADS:", MAX_DOWNLOADS);
         String urls = SharePreferceUtil.getInstance(context).getString(DownloadManager.DM_JSON);
         if (!StringUtils.isNull(urls)) {
