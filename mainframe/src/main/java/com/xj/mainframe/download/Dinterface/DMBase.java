@@ -26,6 +26,11 @@ public abstract class DMBase {
         }
         return instatnce;
     }
+
+    /**
+     * 设置参数改变后重置
+     */
+    public abstract void initSetting();
     /**
      * 清空下载manager
      */

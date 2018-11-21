@@ -32,6 +32,12 @@ public abstract class DownloadB {
     }
 
     /**
+     * 是否正在下载
+     * @return
+     */
+    public abstract  boolean isStart();
+
+    /**
      * 开启下载
      */
     public abstract void start();

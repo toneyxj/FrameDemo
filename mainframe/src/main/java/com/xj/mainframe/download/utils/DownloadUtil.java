@@ -25,14 +25,22 @@ public class DownloadUtil extends DownloadB {
     private boolean isPasue = false;
     private boolean isDelete = false;
     private long sendTime=0;
+    private boolean isStart=false;
 
     public DownloadUtil(DownloadListener listener, DownloadModel model) {
         super(listener, model);
     }
 
     @Override
+    public boolean isStart() {
+        return isStart;
+    }
+
+    @Override
    public void start() {
-        download(getModel());
+        if (!isStart) {
+            download(getModel());
+        }
     }
 
     @Override
@@ -56,6 +64,7 @@ public class DownloadUtil extends DownloadB {
             public void run() {
                 if (getListener() != null)
                     getListener().onDownloadStart(model.getPath());
+                isStart=true;
                 InputStream is = null;
                 RandomAccessFile savedFile = null;
                 long downloadLength = 0;   //记录已经下载的文件长度
@@ -156,8 +165,10 @@ public class DownloadUtil extends DownloadB {
         if (getListener() == null) return;
         if (isDelete) {
             getListener().onDelete(model.getPath());
+            isStart=false;
         } else if (isPasue) {
             getListener().onPasue(model.getPath());
+            isStart=false;
         } else {
             if (NetWorkUtil.isNetworkConnected(BaseApplication.context)) {
                 if (faileSize < 5) {
@@ -167,9 +178,11 @@ public class DownloadUtil extends DownloadB {
                     getListener().onFailed(model.getPath());
                     //重复下载均出现失败，删除项目，标记下载项目为错误
                     StringUtils.deleteFile(model.getSavePath());
+                    isStart=false;
                 }
             }else {
                 getListener().onPasue(model.getPath());
+                isStart=false;
             }
         }
     }

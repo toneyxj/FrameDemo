@@ -15,6 +15,8 @@ import com.xj.mainframe.download.listener.EventInterface;
 import com.xj.mainframe.download.listener.SucceedListener;
 import com.xj.mainframe.download.utils.DownloadB;
 import com.xj.mainframe.download.utils.DownloadUtil;
+import com.xj.mainframe.netState.NetWorkUtil;
+import com.xj.mainframe.utils.SharePreferceBase;
 import com.xj.mainframe.utils.SharePreferceUtil;
 import com.xj.mainframe.utils.StringUtils;
 import com.xj.mainframe.utils.SystemUtils;
@@ -48,18 +50,41 @@ public class DownloadManager extends DMBase implements DownloadListener {
      * 下载事件处理,默认
      */
     private List<DownloadB> downloads = new ArrayList<>();
+    /**
+     * 默认情况下手机网络不可下载
+     */
+    private boolean ismobilDownload = false;
 
     public DownloadManager(Context context) {
         this.context = context;
         MAX_DOWNLOADS = ((int) (SystemUtils.getCPUCoreNum() * 0.5));
         if (MAX_DOWNLOADS < 1) MAX_DOWNLOADS = 1;
-        APPLog.e(TAG_MD + "-MAX_DOWNLOADS:", MAX_DOWNLOADS);
+        //初始化设置数据
+        ismobilDownload = SharePreferceBase.getIsMobile(context);
+        //初始化上次下载的文件
         String urls = SharePreferceUtil.getInstance(context).getString(DownloadManager.DM_JSON);
         if (!StringUtils.isNull(urls)) {
             List<String> lists = JSON.parseArray(urls, String.class);
             for (String v : lists) {
                 directDownload(v);
             }
+        }
+
+    }
+
+    @Override
+    public void initSetting() {
+        ismobilDownload = SharePreferceBase.getIsMobile(context);
+        boolean can = canDownload(false);
+        for (DownloadB dow : downloads) {
+            if (can) {
+                dow.start();
+            } else {
+                dow.pasue();
+            }
+        }
+        if (can) {
+            initDownload();
         }
     }
 
@@ -97,10 +122,12 @@ public class DownloadManager extends DMBase implements DownloadListener {
         }
         DownloadB downloadB = new DownloadUtil(this, model);
         getDownloads().add(downloadB);
-        downloadB.start();
         if (getDownloads().size() > MAX_DOWNLOADS) {
             DownloadB dlb = getDownloads().remove(0);
             dlb.pasue();
+        }
+        if (canDownload(true)) {
+            downloadB.start();
         }
     }
 
@@ -116,7 +143,9 @@ public class DownloadManager extends DMBase implements DownloadListener {
             DownloadModel model = new DownloadModel().setPath(url);
             Operate.getInstance(context).saveMode(model);
         }
-        initDownload();
+        if (canDownload(true)) {
+            initDownload();
+        }
     }
 
     /**
@@ -147,16 +176,16 @@ public class DownloadManager extends DMBase implements DownloadListener {
      */
     @Override
     public void switchDownload(@NonNull String url) {
-         DownloadB downB=null;
+        DownloadB downB = null;
         for (DownloadB downloadB : getDownloads()) {
-           if ( downloadB.getModel().getPath().equals(url)){
-               downB=downloadB;
-               break;
-           }
+            if (downloadB.getModel().getPath().equals(url)) {
+                downB = downloadB;
+                break;
+            }
         }
-        if (downB==null){//未下载的文件，切换到下载状态
+        if (downB == null) {//未下载的文件，切换到下载状态
             directDownload(url);
-        }else {//下载下的文件暂停下载
+        } else {//下载下的文件暂停下载
             getDownloads().remove(downB);
             initDownload();
             downB.pasue();
@@ -187,7 +216,8 @@ public class DownloadManager extends DMBase implements DownloadListener {
                 Operate.getInstance(context).delete(false, urls);
                 listener.onSucess();
 
-                initDownload();
+                if (canDownload(false))
+                    initDownload();
             }
         }).start();
 
@@ -216,21 +246,46 @@ public class DownloadManager extends DMBase implements DownloadListener {
         int downS = getDownloads().size();
         if (downS < MAX_DOWNLOADS) {
             int getsize = MAX_DOWNLOADS - downS;
-            String[] vas=null;
-            if (downS>0) {
+            String[] vas = null;
+            if (downS > 0) {
                 vas = new String[downS];
                 for (int i = 0; i < downS; i++) {
                     vas[i] = getDownloads().get(i).getModel().getB6path();
                 }
             }
-            List<DownloadModel> models = Operate.getInstance(context).getDownloadLimitModels(getsize,vas);
-            APPLog.e(TAG_MD + "-initDownload-models: size="+models.size(), models);
+            List<DownloadModel> models = Operate.getInstance(context).getDownloadLimitModels(getsize, vas);
+            APPLog.e(TAG_MD + "-initDownload-models: size=" + models.size(), models);
             for (DownloadModel model : models) {
                 DownloadB downloadB = new DownloadUtil(this, model);
                 getDownloads().add(downloadB);
                 downloadB.start();
             }
         }
+    }
+
+    /**
+     * 是否可以下载
+     *
+     * @return
+     */
+    private boolean canDownload(boolean ishitn) {
+        //手写网络可以下载
+        if (ismobilDownload) {
+            if (NetWorkUtil.isNetworkConnected(context)) {
+                return true;
+            } else {
+                //提示网络误网络连接
+
+            }
+        } else {
+            if (NetWorkUtil.isWifiConnected(context)) {
+                return true;
+            } else {
+                //提示连接wifi
+
+            }
+        }
+        return false;
     }
 
     public synchronized Set<EventInterface> getEvents() {
@@ -260,22 +315,23 @@ public class DownloadManager extends DMBase implements DownloadListener {
     public void unRegisterEvent(@NonNull EventInterface event) {
         getEvents().remove(event);
     }
-    private synchronized void removedownloadByPath(String path){
-       DownloadB dbv=null;
-        for (DownloadB d:downloads){
-            if (d.getModel().getPath().equals(path)){
-                dbv=d;
+
+    private synchronized void removedownloadByPath(String path) {
+        DownloadB dbv = null;
+        for (DownloadB d : downloads) {
+            if (d.getModel().getPath().equals(path)) {
+                dbv = d;
                 break;
             }
         }
-        if (dbv!=null){
+        if (dbv != null) {
             getDownloads().remove(dbv);
         }
     }
 
     @Override
     public void onSuccess(final String downloadPath) {
-        APPLog.e(TAG_MD,"onSuccess:"+downloadPath);
+        APPLog.e(TAG_MD, "onSuccess:" + downloadPath);
         Operate.getInstance(context).updateStatus(downloadPath, Config.download_success);
         for (final EventInterface event : events) {
             if (event.isAcceptDownload()) {
@@ -288,14 +344,12 @@ public class DownloadManager extends DMBase implements DownloadListener {
             }
         }
         removedownloadByPath(downloadPath);
-        if (!isStop) {
-            initDownload();
-        }
+        initDownload();
     }
 
     @Override
     public void onDownloadStart(final String downloadPath) {
-        APPLog.e(TAG_MD,"onDownloadStart:"+downloadPath);
+        APPLog.e(TAG_MD, "onDownloadStart:" + downloadPath);
         Operate.getInstance(context).updateStatus(downloadPath, Config.download_loding);
         for (final EventInterface event : events) {
             if (event.isAcceptDownload()) {
@@ -311,7 +365,7 @@ public class DownloadManager extends DMBase implements DownloadListener {
 
     @Override
     public void onDownloading(final String downloadPath, final int curDownlaod, final long count, final long currentsize) {
-        APPLog.e(TAG_MD,"onDownloading:"+downloadPath+"  curDownlaod="+curDownlaod+"  count="+count+"  currentsize="+currentsize);
+        APPLog.e(TAG_MD, "onDownloading:" + downloadPath + "  curDownlaod=" + curDownlaod + "  count=" + count + "  currentsize=" + currentsize);
         Operate.getInstance(context).updateProgress(downloadPath, count, currentsize);
         for (final EventInterface event : events) {
             if (event.isAcceptDownload()) {
@@ -327,7 +381,7 @@ public class DownloadManager extends DMBase implements DownloadListener {
 
     @Override
     public void onFailed(final String downloadPath) {
-        APPLog.e(TAG_MD,"onFailed:"+downloadPath);
+        APPLog.e(TAG_MD, "onFailed:" + downloadPath);
         Operate.getInstance(context).updateStatus(downloadPath, Config.download_faile);
         for (final EventInterface event : events) {
             if (event.isAcceptDownload()) {
@@ -340,14 +394,12 @@ public class DownloadManager extends DMBase implements DownloadListener {
             }
         }
         removedownloadByPath(downloadPath);
-        if (!isStop){
-            initDownload();
-        }
+        initDownload();
     }
 
     @Override
     public void onPasue(final String downloadPath) {
-        APPLog.e(TAG_MD,"onPasue:"+downloadPath);
+        APPLog.e(TAG_MD, "onPasue:" + downloadPath);
         Operate.getInstance(context).updateStatus(downloadPath, Config.download_pause);
         for (final EventInterface event : events) {
             if (event.isAcceptDownload()) {
@@ -360,19 +412,15 @@ public class DownloadManager extends DMBase implements DownloadListener {
             }
         }
         removedownloadByPath(downloadPath);
-        if (!isStop){
-            initDownload();
-        }
+        initDownload();
     }
 
     @Override
     public void onDelete(String downloadPath) {
-        APPLog.e(TAG_MD,"onDelete:"+downloadPath);
+        APPLog.e(TAG_MD, "onDelete:" + downloadPath);
         StringUtils.deleteFile(Utils.getSavePath(downloadPath));
         Operate.getInstance(context).delete(false, downloadPath);
         removedownloadByPath(downloadPath);
-        if (!isStop){
-            initDownload();
-        }
+        initDownload();
     }
 }

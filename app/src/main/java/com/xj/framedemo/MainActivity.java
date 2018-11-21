@@ -1,15 +1,15 @@
 package com.xj.framedemo;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.xj.framedemo.testrefuresh.ScrollingActivity;
 import com.xj.mainframe.configer.APPLog;
 import com.xj.mainframe.configer.ToastUtils;
+import com.xj.mainframe.dialog.AlertDialog;
 import com.xj.mainframe.eventBus.EventManger;
 import com.xj.mainframe.eventBus.EventObserver;
+import com.xj.mainframe.listener.AlertInterface;
 import com.xj.mainframe.listener.XJOnClickListener;
 import com.xj.mainframe.netState.NetChangeObserver;
 import com.xj.mainframe.netState.NetWorkStateUtil;
@@ -61,7 +61,15 @@ public class MainActivity extends Activity implements NetChangeObserver,EventObs
         (findViewById(R.id.click)).setOnClickListener(new XJOnClickListener() {
             @Override
             public void onclickView(View view) {
-                startActivity(new Intent(MainActivity.this, ScrollingActivity.class));
+                new AlertDialog(MainActivity.this).builder(1)
+                        .setImg("https://static.firefoxchina.cn/img/201811/5_5bf204dabe0df0.jpg")
+                        .setMsg("只是简单的测试一下提示")
+                        .setTitle("提示")
+                        .setNegativeButton("取消")
+                        .setPositiveButton("确定")
+                        .setAlertInterface(anInterface)
+                        .show();
+//                startActivity(new Intent(MainActivity.this, ScrollingActivity.class));
 //                BrowserActivity.StartBrowser(MainActivity.this,"http://soft.imtt.qq.com/browser/tes/feedback.html",false);
             }
         });
@@ -99,9 +107,23 @@ public class MainActivity extends Activity implements NetChangeObserver,EventObs
 //        findViewById(R.id.three).setOnClickListener(clickListener);
 //        findViewById(R.id.four).setOnClickListener(clickListener);
     }
-//private XJOnClickListener clickListener=new XJOnClickListener() {
-//    @Override
-//    public void onclickView(View view) {
+
+    private AlertInterface anInterface=new AlertInterface() {
+        @Override
+        public boolean onNegative(int code) {
+            ToastUtils.getInstance().showToastShort("点击onNegative code="+code);
+            return true;
+        }
+
+        @Override
+        public boolean onPositive(int code) {
+            ToastUtils.getInstance().showToastShort("点击onPositive code="+code);
+            return true;
+        }
+    };
+private XJOnClickListener clickListener=new XJOnClickListener() {
+    @Override
+    public void onclickView(View view) {
 //        switch (view.getId()){
 //            case R.id.one:
 //                DMBase.getInstance(MainActivity.this).switchDownload(urls.get(0));
@@ -118,8 +140,8 @@ public class MainActivity extends Activity implements NetChangeObserver,EventObs
 //            default:
 //                break;
 //        }
-//    }
-//};
+    }
+};
     /**
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.

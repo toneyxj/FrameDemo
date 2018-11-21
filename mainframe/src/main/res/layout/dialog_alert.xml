@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lLayout_bg"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/alert_bg"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txt_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/default_title_color"
+        android:textSize="@dimen/sp20" />
+
+    <TextView
+        android:id="@+id/txt_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sp16"
+        android:visibility="gone" />
+
+    <com.xj.mainframe.view.BaseView.XJImageView
+        android:id="@+id/img_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/black" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.xj.mainframe.view.extendView.AlphaButton
+            android:id="@+id/btn_neg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="45dp"
+            android:background="@color/transparency"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp16" />
+
+        <View
+            android:id="@+id/img_line"
+            android:layout_width="@dimen/line_1dp"
+            android:layout_height="match_parent"
+            android:background="@color/black" />
+
+        <com.xj.mainframe.view.extendView.AlphaButton
+            android:id="@+id/btn_pos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="45dp"
+            android:layout_weight="1"
+            android:background="@color/transparency"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp16" />
+    </LinearLayout>
+
+</LinearLayout>
