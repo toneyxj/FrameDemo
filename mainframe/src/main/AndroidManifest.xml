@@ -22,6 +22,8 @@
         <activity android:name=".webX5.BrowserActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|screenSize|keyboardHidden"/>
+
+        <!--<service android:name=".base.InitializeService"/>-->
     </application>
 
 </manifest>

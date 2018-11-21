@@ -1,6 +1,7 @@
 package com.xj.mainframe.download;
 
 import com.xj.mainframe.download.db.Config;
+import com.xj.mainframe.download.db.Utils;
 import com.xj.mainframe.utils.Base64Util;
 
 /**
@@ -8,10 +9,10 @@ import com.xj.mainframe.utils.Base64Util;
  * Created by xj on 018/11/9.
  */
 public class DownloadModel {
-    private  int id ;//下载文件路口
-    private String path;//下载文件路口
+    private  int id;//下载文件路口
+    private String path;//下载文件路径
     private String savePath;//保存文件路径
-    private long fileSize;//文件总大小
+    private long fileSize=0;//文件总大小
     private long currentSize=0;//当前下载文件大小
     private int status= Config.download_wait;//当前下载状态
     private String extension;//文件下载扩展字段一般保存一个json字符串
@@ -44,14 +45,18 @@ public class DownloadModel {
     }
 
     public String getSavePath() {
-        if (isNull(savePath)){
+        if (isNull(B6savePath)&&isNull(savePath)){
+            //路径转保存地址
+            savePath= Utils.getSavePath(getPath());
+        }if (isNull(savePath)){
             savePath= Base64Util.decodeData(B6savePath);
+        }else {
+
         }
         return savePath;
     }
 
     public DownloadModel setSavePath(String savePath) {
-
         this.savePath = savePath;
         return this;
     }
@@ -94,20 +99,19 @@ public class DownloadModel {
 
     public String getB6savePath() {
         if (isNull(B6savePath)){
-            B6savePath= Base64Util.encodeData(savePath);
+            B6savePath= Base64Util.encodeData(getSavePath());
         }
         return B6savePath;
     }
 
     public DownloadModel setB6savePath(String b6savePath) {
         B6savePath = b6savePath;
-
         return this;
     }
 
     public String getB6path() {
         if (isNull(B6path)){
-            B6path= Base64Util.encodeData(path);
+            B6path= Base64Util.encodeData(getPath());
         }
         return B6path;
     }
@@ -121,11 +125,28 @@ public class DownloadModel {
         return downtime;
     }
 
-    public void setDowntime(long downtime) {
+    public DownloadModel setDowntime(long downtime) {
         this.downtime = downtime;
+        return this;
     }
 
     private boolean isNull(String path){
         return path==null||path.trim().isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return "DownloadModel{" +
+                "id=" + id +
+                ", path='" + path + '\'' +
+                ", savePath='" + savePath + '\'' +
+                ", fileSize=" + fileSize +
+                ", currentSize=" + currentSize +
+                ", status=" + status +
+                ", extension='" + extension + '\'' +
+                ", downtime=" + downtime +
+                ", B6savePath='" + B6savePath + '\'' +
+                ", B6path='" + B6path + '\'' +
+                '}';
     }
 }

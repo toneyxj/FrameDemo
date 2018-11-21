@@ -7,8 +7,6 @@ import android.support.v4.app.Fragment;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
-import com.tencent.smtt.sdk.QbSdk;
-import com.xj.mainframe.configer.APPLog;
 import com.xj.mainframe.configer.ToastUtils;
 import com.xj.mainframe.utils.DynamicTimeFormat;
 import com.xj.refuresh.SmartRefreshLayout;
@@ -57,28 +55,9 @@ public class BaseApplication extends Application {
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return;
         }
+        ToastUtils.getInstance().initToast(getApplicationContext());
         context=getApplicationContext();
         refWatcher = LeakCanary.install(this);
-        //注册提示
-        ToastUtils.getInstance().initToast(getApplicationContext());
-
-        //X5内核
-        QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
-
-            @Override
-            public void onViewInitFinished(boolean arg0) {
-                // TODO Auto-generated method stub
-                //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
-                APPLog.e("BaseApplication-app", " onViewInitFinished is " + arg0);
-            }
-
-            @Override
-            public void onCoreInitFinished() {
-                // TODO Auto-generated method stub
-            }
-        };
-        //x5内核初始化接口
-        QbSdk.initX5Environment(getApplicationContext(),  cb);
     }
 
     /**

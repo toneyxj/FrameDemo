@@ -6,6 +6,35 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.xj.framedemo.MainActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.xj.mainframe.view.BaseView.XJButton
+            android:id="@+id/one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="切换1"/>
+        <com.xj.mainframe.view.BaseView.XJButton
+            android:id="@+id/two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="切换2"/>
+        <com.xj.mainframe.view.BaseView.XJButton
+            android:id="@+id/three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="切换3"/>
+        <com.xj.mainframe.view.BaseView.XJButton
+            android:id="@+id/four"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="切换4"/>
+    </LinearLayout>
 
     <com.xj.mainframe.view.extendView.AlphaTextViewClick
         android:id="@+id/sample_text"

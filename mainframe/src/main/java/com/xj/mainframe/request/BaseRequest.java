@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.alibaba.fastjson.JSONObject;
+import com.xj.mainframe.configer.APPLog;
 import com.xj.mainframe.configer.ToastUtils;
 import com.xj.mainframe.dialog.LodingDialog;
 import com.xj.mainframe.listener.XJOnClickListener;
@@ -94,6 +95,7 @@ public abstract class BaseRequest implements RequestInterface, RequestObserver {
     @Override
     public void onFaile(RequestModel code, int status, String msg) {
         if (isFinish) return;
+        APPLog.e("status:"+status+"  msg:"+msg);
         try {
             hideShow();
             //不显示任何提示

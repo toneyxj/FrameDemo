@@ -1,5 +1,9 @@
 package com.xj.mainframe.utils;
 
+import android.os.Environment;
+
+import com.xj.mainframe.download.listener.SucceedListener;
+
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -11,7 +15,26 @@ import java.util.Map;
  */
 
 public class StringUtils {
-
+    /**
+     * 获取sd卡路径
+     *
+     * @return 返回路径
+     */
+    public static String getSDPath() {
+        File sdDir = null;
+        boolean sdCardExist = Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED); // 判断sd卡是否存在
+        if (sdCardExist) {
+            sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
+        } else {
+            return "";
+        }
+        String path = sdDir.toString() + "/baseData/";
+        if (!(new File(path).exists())) {
+            new File(path).mkdirs();
+        }
+        return path;
+    }
     /**
      * 空返回true, 否则false;
      *
@@ -88,19 +111,35 @@ public class StringUtils {
      * @param file 删除路径
      */
     public static void deleteFile(File file) {
-        if (file.exists()) {
-            if (file.isFile()) {
+        deleteFile(file,null);
+    }
+    public static void deleteFile(final File file, final SucceedListener listener) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                deleteSys(file);
+                if (listener!=null)listener.onSucess();
+            }
+        }).start();
+    }
+    private static void deleteSys(File file){
+        try {
+            if (file.exists()) {
+                if (file.isFile()) {
+                    file.delete();
+                }
+                // 如果它是一个目录
+                else if (file.isDirectory()) {
+                    // 声明目录下所有的文件 files[];
+                    File files[] = file.listFiles();
+                    for (int i = 0; i < files.length; i++) { // 遍历目录下所有的文件
+                        deleteSys(files[i]); // 把每个文件 用这个方法进行迭代
+                    }
+                }
                 file.delete();
             }
-            // 如果它是一个目录
-            else if (file.isDirectory()) {
-                // 声明目录下所有的文件 files[];
-                File files[] = file.listFiles();
-                for (int i = 0; i < files.length; i++) { // 遍历目录下所有的文件
-                    deleteFile(files[i]); // 把每个文件 用这个方法进行迭代
-                }
-            }
-            file.delete();
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
     /**
@@ -109,23 +148,13 @@ public class StringUtils {
      * @param path 删除路径
      */
     public static void deleteFile(String path) {
-        if (StringUtils.isNull(path))return;
-        File file=new File(path);
-        if (file.exists()) {
-            if (file.isFile()) {
-                file.delete();
-            }
-            // 如果它是一个目录
-            else if (file.isDirectory()) {
-                // 声明目录下所有的文件 files[];
-                File files[] = file.listFiles();
-                for (int i = 0; i < files.length; i++) { // 遍历目录下所有的文件
-                    deleteFile(files[i]); // 把每个文件 用这个方法进行迭代
-                }
-            }
-            file.delete();
-        }
+        deleteFile(path,null);
     }
+    public static void deleteFile(String path, SucceedListener listener) {
+        if (StringUtils.isNull(path))return;
+        deleteFile(new File(path),listener);
+    }
+
     /**
      * 将字符串转成MD5值
      *
