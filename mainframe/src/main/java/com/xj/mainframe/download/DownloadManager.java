@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.alibaba.fastjson.JSON;
 import com.xj.mainframe.configer.APPLog;
+import com.xj.mainframe.dialog.AlertDialog;
 import com.xj.mainframe.download.Dinterface.DMBase;
 import com.xj.mainframe.download.db.Config;
 import com.xj.mainframe.download.db.Operate;
@@ -15,7 +16,10 @@ import com.xj.mainframe.download.listener.EventInterface;
 import com.xj.mainframe.download.listener.SucceedListener;
 import com.xj.mainframe.download.utils.DownloadB;
 import com.xj.mainframe.download.utils.DownloadUtil;
+import com.xj.mainframe.netState.NetChangeObserver;
+import com.xj.mainframe.netState.NetWorkStateUtil;
 import com.xj.mainframe.netState.NetWorkUtil;
+import com.xj.mainframe.utils.FileUtils;
 import com.xj.mainframe.utils.SharePreferceBase;
 import com.xj.mainframe.utils.SharePreferceUtil;
 import com.xj.mainframe.utils.StringUtils;
@@ -54,6 +58,7 @@ public class DownloadManager extends DMBase implements DownloadListener {
      * 默认情况下手机网络不可下载
      */
     private boolean ismobilDownload = false;
+    private AlertDialog alertDialog = null;
 
     public DownloadManager(Context context) {
         this.context = context;
@@ -69,8 +74,25 @@ public class DownloadManager extends DMBase implements DownloadListener {
                 directDownload(v);
             }
         }
+        NetWorkStateUtil.getInstance(context).registerObserver(observer);
 
     }
+   private NetChangeObserver observer=new NetChangeObserver() {
+        @Override
+        public void onConnect(NetWorkUtil.netType type) {
+            //网络有连接
+            if (canDownload(false)){
+                startDownload();
+            }else {
+                stopAllDownload();
+            }
+        }
+
+        @Override
+        public void onDisConnect() {
+            stopAllDownload();
+        }
+    };
 
     @Override
     public void initSetting() {
@@ -105,6 +127,8 @@ public class DownloadManager extends DMBase implements DownloadListener {
         APPLog.e("DownloadManager-clearDownloadManager", json);
         SharePreferceUtil.getInstance(context).setCache(DownloadManager.DM_JSON, json);
         getDownloads().clear();
+
+        NetWorkStateUtil.getInstance(context).removeObserver(observer);
         instatnce = null;
     }
 
@@ -166,6 +190,9 @@ public class DownloadManager extends DMBase implements DownloadListener {
     @Override
     public void startDownload() {
         isStop = false;
+        for (DownloadB d : getDownloads()) {
+            d.start();
+        }
         initDownload();
     }
 
@@ -241,7 +268,7 @@ public class DownloadManager extends DMBase implements DownloadListener {
      * 初始化下载数据,获取下载项目
      */
     private void initDownload() {
-        if (isStop) return;
+        if (isStop && !canDownload(false)) return;
         //加载的数据没有满的情况
         int downS = getDownloads().size();
         if (downS < MAX_DOWNLOADS) {
@@ -270,22 +297,55 @@ public class DownloadManager extends DMBase implements DownloadListener {
      */
     private boolean canDownload(boolean ishitn) {
         //手写网络可以下载
-        if (ismobilDownload) {
-            if (NetWorkUtil.isNetworkConnected(context)) {
-                return true;
-            } else {
-                //提示网络误网络连接
-
-            }
+        if (FileUtils.getInstance().getUseMenoryLong() < 1024 * 1024 * 20) {
+            if (ishitn)
+                setAlertDialog("内存不足，请删除不必要的文件");
         } else {
-            if (NetWorkUtil.isWifiConnected(context)) {
-                return true;
+            if (ismobilDownload) {
+                if (NetWorkUtil.isNetworkConnected(context)) {
+                    return true;
+                } else if (ishitn) {
+                    //提示网络误网络连接
+                    setAlertDialog("请检查网络连接！！");
+                }
             } else {
-                //提示连接wifi
-
+                if (NetWorkUtil.isWifiConnected(context)) {
+                    return true;
+                } else if (ishitn) {
+                    //提示连接wifi
+                    setAlertDialog("请检查wifi连接！！");
+                }
             }
         }
         return false;
+    }
+
+    private String getErorMsg() {
+        String msg = "下载出小差啦！！";
+        if (ismobilDownload) {
+            if (!NetWorkUtil.isNetworkConnected(context)) {
+                //提示网络误网络连接
+                msg = "请检查网络连接！！";
+            }
+        } else if (!NetWorkUtil.isWifiConnected(context)) {
+            //提示连接wifi
+            msg = "请检查wifi连接！！";
+        } else if (FileUtils.getInstance().getUseMenoryLong() < 1024 * 1024 * 20) {
+            msg = "内存不足，请删除不必要的文件，重新下载";
+        }
+        return msg;
+    }
+
+    private void setAlertDialog(String value) {
+        if (alertDialog == null || !alertDialog.isshow()) {
+            alertDialog = null;
+            alertDialog = new AlertDialog(context).builder(0)
+                    .setTitle("网络提示")
+                    .setMsg(value);
+            alertDialog.show();
+        } else {
+            alertDialog.setMsg(value);
+        }
     }
 
     public synchronized Set<EventInterface> getEvents() {
@@ -382,19 +442,21 @@ public class DownloadManager extends DMBase implements DownloadListener {
     @Override
     public void onFailed(final String downloadPath) {
         APPLog.e(TAG_MD, "onFailed:" + downloadPath);
-        Operate.getInstance(context).updateStatus(downloadPath, Config.download_faile);
+        if (canDownload(false)) {//网络，内存正常情况下删除下载备注下载失败
+            Operate.getInstance(context).updateStatus(downloadPath, Config.download_faile);
+            removedownloadByPath(downloadPath);
+            initDownload();
+        }
         for (final EventInterface event : events) {
             if (event.isAcceptDownload()) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        event.onFailed(downloadPath);
+                        event.onFailed(downloadPath, getErorMsg());
                     }
                 });
             }
         }
-        removedownloadByPath(downloadPath);
-        initDownload();
     }
 
     @Override

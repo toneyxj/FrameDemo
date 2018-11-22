@@ -8,7 +8,6 @@ import android.text.format.Formatter;
 import android.util.Log;
 
 import com.xj.mainframe.BaseApplication;
-import com.xj.mainframe.configer.APPLog;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -200,42 +199,16 @@ public class FileUtils {
     }
 
     /**
-     * 根据路径获取内存状态
-     * @return
-     */
-    public  String[] getMemoryInfo() {
-        File path = Environment.getExternalStorageDirectory();
-        // 获得一个磁盘状态对象
-        StatFs stat = new StatFs(path.getPath());
-
-        long blockSize = stat.getBlockSize();   // 获得一个扇区的大小
-
-        long totalBlocks = stat.getBlockCount();    // 获得扇区的总数
-
-        long availableBlocks = stat.getAvailableBlocks();   // 获得可用的扇区数量
-
-        // 总空间
-        String totalMemory =  Formatter.formatFileSize(context, totalBlocks * blockSize);
-        // 可用空间
-        String availableMemory = Formatter.formatFileSize(context, availableBlocks * blockSize);
-        String[] values=new String[2];
-        values[0]=totalMemory;
-        values[1]=availableMemory;
-        APPLog.e("总空间: " + totalMemory + "\n可用空间: " + availableMemory);
-        return values;
-    }
-
-    /**
      * 获得外部总空间大小
      * @return
      */
-    public String getTotalMenory(){
+    public synchronized String getTotalMenory(){
         // 总空间
         String totalMemory =  Formatter.formatFileSize(context,getTotalMenoryLong());
         return totalMemory;
     }
 
-    public long getTotalMenoryLong(){
+    public synchronized long getTotalMenoryLong(){
         File path = Environment.getExternalStorageDirectory();
         if (!path.exists())return 0;
         // 获得一个磁盘状态对象
@@ -245,7 +218,7 @@ public class FileUtils {
         long totalBlocks=0 ; // 获得扇区的总数
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            stat.getAvailableBlocksLong();
+            blockSize=stat.getBlockSizeLong();
             totalBlocks = stat.getBlockCountLong();
         }else {
             blockSize = stat.getBlockSize();
@@ -257,12 +230,12 @@ public class FileUtils {
      * 获得外部可用空间大小
      * @return
      */
-    public String getUserMenory(){
+    public synchronized String getUseMenory(){
         // 总空间
-        String totalMemory =  Formatter.formatFileSize(context,getUserMenoryLong());
+        String totalMemory =  Formatter.formatFileSize(context,getUseMenoryLong());
         return totalMemory;
     }
-    public long getUserMenoryLong(){
+    public synchronized long getUseMenoryLong(){
         File path = Environment.getExternalStorageDirectory();
         if (!path.exists())return 0;
         // 获得一个磁盘状态对象
@@ -271,13 +244,13 @@ public class FileUtils {
         long blockSize =0;  // 获得一个扇区的大小
         long availableBlocks =0; // 获得可用的扇区数量
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            stat.getAvailableBlocksLong();
+            blockSize=stat.getBlockSizeLong();
             availableBlocks = stat.getAvailableBlocksLong();
         }else {
             blockSize = stat.getBlockSize();
             availableBlocks=stat.getAvailableBlocks();
         }
-        // 总空间
+        // 可用空间
         return  availableBlocks * blockSize;
     }
     /**

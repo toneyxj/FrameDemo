@@ -7,6 +7,7 @@ import android.view.View;
 import com.xj.mainframe.configer.APPLog;
 import com.xj.mainframe.configer.ToastUtils;
 import com.xj.mainframe.dialog.AlertDialog;
+import com.xj.mainframe.download.Dinterface.DMBase;
 import com.xj.mainframe.eventBus.EventManger;
 import com.xj.mainframe.eventBus.EventObserver;
 import com.xj.mainframe.listener.AlertInterface;
@@ -44,9 +45,9 @@ public class MainActivity extends Activity implements NetChangeObserver,EventObs
         urls.add("http://gdownyf.baijincdn.cn/data/wisegame/7755dede9585bf18/yingyongbao_7292130.apk");
         urls.add("http://gdownyf.baijincdn.cn/data/wisegame/6b9bb3afc505fdee/qichezhijia_965.apk");
         APPLog.e("SystemUtils.getCPUCoreNum()", SystemUtils.getCPUCoreNum());
-//        for (String url:urls) {
-//            DMBase.getInstance(this).addDownload(url);
-//        }
+        for (String url:urls) {
+            DMBase.getInstance(this).addDownload(url);
+        }
 //        ButterKnife.bind(this);
         // Example of a call to a native method
 //        TextView tv = (TextView) findViewById(R.id.sample_text);
@@ -61,14 +62,9 @@ public class MainActivity extends Activity implements NetChangeObserver,EventObs
         (findViewById(R.id.click)).setOnClickListener(new XJOnClickListener() {
             @Override
             public void onclickView(View view) {
-                new AlertDialog(MainActivity.this).builder(1)
-                        .setImg("https://static.firefoxchina.cn/img/201811/5_5bf204dabe0df0.jpg")
-                        .setMsg("只是简单的测试一下提示")
-                        .setTitle("提示")
-                        .setNegativeButton("取消")
-                        .setPositiveButton("确定")
-                        .setAlertInterface(anInterface)
-                        .show();
+                new AlertDialog(MainActivity.this).builder(0)
+                        .setTitle("网络提示")
+                        .setMsg("提示").show();
 //                startActivity(new Intent(MainActivity.this, ScrollingActivity.class));
 //                BrowserActivity.StartBrowser(MainActivity.this,"http://soft.imtt.qq.com/browser/tes/feedback.html",false);
             }

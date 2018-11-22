@@ -21,7 +21,7 @@ public class NetWorkStateUtil {
         if (instatnce == null) {
             synchronized (NetWorkStateUtil.class) {
                 if (instatnce == null) {
-                    instatnce = new NetWorkStateUtil(context);
+                    instatnce = new NetWorkStateUtil(context.getApplicationContext());
                 }
             }
         }

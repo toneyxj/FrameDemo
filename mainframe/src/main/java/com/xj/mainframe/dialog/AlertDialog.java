@@ -77,6 +77,7 @@ public class AlertDialog {
 
         //设置背景大小
         Window window = dialog.getWindow();
+        window.setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         window.setWindowAnimations(R.style.enlargement_animation);
         window.setGravity(Gravity.CENTER);
         window.getDecorView().setPadding(DensityUtil.getScreenW(context)/ 8, 0, DensityUtil.getScreenW(context)/ 8, 0);
@@ -204,6 +205,9 @@ public class AlertDialog {
             btn_neg.setVisibility(View.VISIBLE);
         }
     }
+    public boolean isshow(){
+        return dialog!=null&&dialog.isShowing();
+    }
 
     public void show() {
         try {
@@ -212,7 +216,7 @@ public class AlertDialog {
                 dialog.show();
             }
         } catch (Exception e) {
-
+                e.printStackTrace();
         }
     }
     public void hide(){

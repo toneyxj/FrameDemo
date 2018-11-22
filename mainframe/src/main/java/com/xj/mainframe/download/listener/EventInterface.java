@@ -28,8 +28,9 @@ public interface EventInterface {
     /**
      * 下载失败
      * @param downloadPath 下载路径
+     * @param msg 下载错误提示
      */
-    void onFailed(String downloadPath);
+    void onFailed(String downloadPath,String msg);
 
     /**
      * 暂停下载

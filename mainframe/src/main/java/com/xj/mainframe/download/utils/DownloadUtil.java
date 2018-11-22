@@ -5,6 +5,7 @@ import com.xj.mainframe.download.DownloadModel;
 import com.xj.mainframe.download.db.Utils;
 import com.xj.mainframe.download.listener.DownloadListener;
 import com.xj.mainframe.netState.NetWorkUtil;
+import com.xj.mainframe.utils.FileUtils;
 import com.xj.mainframe.utils.StringUtils;
 
 import java.io.File;
@@ -74,6 +75,7 @@ public class DownloadUtil extends DownloadB {
                 long contentLength = getContentLength(downloadUrl);
                 //获取文件大小失败
                 if (contentLength == 0) {
+                    //误误网络状态下或者下载地址已不存在
                     onFail(model);//重新启动
                     return;
                 }
@@ -170,7 +172,7 @@ public class DownloadUtil extends DownloadB {
             getListener().onPasue(model.getPath());
             isStart=false;
         } else {
-            if (NetWorkUtil.isNetworkConnected(BaseApplication.context)) {
+            if (isNotDown()) {
                 if (faileSize < 5) {
                     faileSize++;
                     download(model);
@@ -181,10 +183,17 @@ public class DownloadUtil extends DownloadB {
                     isStart=false;
                 }
             }else {
-                getListener().onPasue(model.getPath());
+//                getListener().onPasue(model.getPath());
+                getListener().onFailed(model.getPath());
                 isStart=false;
             }
         }
+    }
+    public boolean isNotDown(){
+        boolean isf= FileUtils.getInstance().getUseMenoryLong()>1024*1024*5;
+        //文件剩余大小小于10
+        boolean isn=NetWorkUtil.isNetworkConnected(BaseApplication.context);
+        return isf&&isn;
     }
 
     /**
@@ -203,7 +212,7 @@ public class DownloadUtil extends DownloadB {
                 response.body().close();
                 return contentLength;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return 0;
