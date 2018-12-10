@@ -16,6 +16,22 @@ import java.util.Map;
 
 public class StringUtils {
     /**
+     * 图片文件格式
+     */
+    public static final String IMAGE_FORMAT = "image/*";
+    /**
+     * 相册，回调值
+     */
+    public static final int PHOTO_ALBUM = 10000;
+    /**
+     * 拍照，回调值
+     */
+    public static final int PHOTOH_TAKE = 10001;
+    /**
+     * 相片处理结果，回调值
+     */
+    public static final int PHOTOHT_DISPOSE = 10003;
+    /**
      * 获取sd卡路径
      *
      * @return 返回路径

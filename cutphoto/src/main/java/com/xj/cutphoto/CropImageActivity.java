@@ -304,17 +304,18 @@ public class CropImageActivity extends MonitoredActivity {
         saveImage(croppedImage);
     }
 
-    private void saveImage(Bitmap croppedImage) {
+    private void saveImage(final Bitmap croppedImage) {
         if (croppedImage != null) {
-            final Bitmap b = croppedImage;
             CropUtil.startBackgroundJob(this, null, getResources().getString(R.string.crop__saving),
                     new Runnable() {
                         public void run() {
-                            saveOutput(b);
+                            saveOutput(croppedImage);
                         }
                     }, handler
             );
         } else {
+            if (croppedImage!=null)
+            croppedImage.recycle();
             finish();
         }
     }
@@ -356,7 +357,7 @@ public class CropImageActivity extends MonitoredActivity {
                 throw new IllegalArgumentException("Rectangle " + rect + " is outside of the image ("
                         + width + "," + height + "," + exifRotation + ")", e);
             }
-
+            decoder.recycle();
         } catch (IOException e) {
             Log.e("Error cropping image: " + e.getMessage(), e);
             setResultException(e);
@@ -416,9 +417,7 @@ public class CropImageActivity extends MonitoredActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (rotateBitmap != null) {
-            rotateBitmap.recycle();
-        }
+        clearImageView();
     }
 
     @Override

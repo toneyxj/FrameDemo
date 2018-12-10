@@ -1,21 +1,21 @@
 package com.xj.framedemo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.xj.mainframe.configer.APPLog;
 import com.xj.mainframe.configer.ToastUtils;
-import com.xj.mainframe.dialog.AlertDialog;
-import com.xj.mainframe.download.Dinterface.DMBase;
 import com.xj.mainframe.eventBus.EventManger;
 import com.xj.mainframe.eventBus.EventObserver;
 import com.xj.mainframe.listener.AlertInterface;
+import com.xj.mainframe.listener.CameraBackListener;
 import com.xj.mainframe.listener.XJOnClickListener;
 import com.xj.mainframe.netState.NetChangeObserver;
 import com.xj.mainframe.netState.NetWorkStateUtil;
 import com.xj.mainframe.netState.NetWorkUtil;
-import com.xj.mainframe.utils.SystemUtils;
+import com.xj.mainframe.utils.CameraUtils;
 import com.xj.mainframe.view.BaseView.XJImageView;
 
 import java.util.ArrayList;
@@ -36,18 +36,30 @@ public class MainActivity extends Activity implements NetChangeObserver,EventObs
 
     public static int mainE=1;
     ArrayList<String> urls=new ArrayList<>();
+
+    private CameraUtils cameraUtils;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        urls.add("http://dlied5.myapp.com/myapp/1104466820/sgame/2017_com.tencent.tmgp.sgame_h178_1.41.2.16_5a7ef8.apk");
-        urls.add("http://gdownyf.baijincdn.cn/data/wisegame/d3cfcbced1a50905/meituan_697.apk");
-        urls.add("http://gdownyf.baijincdn.cn/data/wisegame/7755dede9585bf18/yingyongbao_7292130.apk");
-        urls.add("http://gdownyf.baijincdn.cn/data/wisegame/6b9bb3afc505fdee/qichezhijia_965.apk");
-        APPLog.e("SystemUtils.getCPUCoreNum()", SystemUtils.getCPUCoreNum());
-        for (String url:urls) {
-            DMBase.getInstance(this).addDownload(url);
-        }
+
+//        urls.add("http://dlied5.myapp.com/myapp/1104466820/sgame/2017_com.tencent.tmgp.sgame_h178_1.41.2.16_5a7ef8.apk");
+//        urls.add("http://gdownyf.baijincdn.cn/data/wisegame/d3cfcbced1a50905/meituan_697.apk");
+//        urls.add("http://gdownyf.baijincdn.cn/data/wisegame/7755dede9585bf18/yingyongbao_7292130.apk");
+//        urls.add("http://gdownyf.baijincdn.cn/data/wisegame/6b9bb3afc505fdee/qichezhijia_965.apk");
+//        APPLog.e("SystemUtils.getCPUCoreNum()", SystemUtils.getCPUCoreNum());
+//        for (String url:urls) {
+//            DMBase.getInstance(this).addDownload(url);
+//        }
+
+        cameraUtils=new CameraUtils(this, new CameraBackListener() {
+            @Override
+            public void onCameraBack(String path ) {
+                APPLog.e("onCameraBack-path",path);
+            }
+        });
+
+
 //        ButterKnife.bind(this);
         // Example of a call to a native method
 //        TextView tv = (TextView) findViewById(R.id.sample_text);
@@ -62,17 +74,19 @@ public class MainActivity extends Activity implements NetChangeObserver,EventObs
         (findViewById(R.id.click)).setOnClickListener(new XJOnClickListener() {
             @Override
             public void onclickView(View view) {
-                new AlertDialog(MainActivity.this).builder(0)
-                        .setTitle("网络提示")
-                        .setMsg("提示").show();
+                cameraUtils.startCamera();
+//                new AlertDialog(MainActivity.this).builder(0)
+//                        .setTitle("网络提示")
+//                        .setMsg("提示").show();
+//                startActivity(new Intent(MainActivity.this,TestEdite.class));
 //                startActivity(new Intent(MainActivity.this, ScrollingActivity.class));
 //                BrowserActivity.StartBrowser(MainActivity.this,"http://soft.imtt.qq.com/browser/tes/feedback.html",false);
             }
         });
 
         XJImageView imag=(XJImageView)findViewById(R.id.imag);
-        imag.loadImage("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1540793816775&di=320911c5448aba2c236006c27e8d4024&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Ftj%2F2018-09-27%2F5baca04abc904.jpg");
-
+//        imag.loadImage("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1540793816775&di=320911c5448aba2c236006c27e8d4024&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Ftj%2F2018-09-27%2F5baca04abc904.jpg");
+//        imag.loadImage("/data/data/com.xj.framedemo/files/cache/image/1544172534400.png");
          LinkedList<String> observers=new LinkedList<>();
         observers.add("就是这么");
         observers.add("就是这么");
@@ -145,11 +159,19 @@ private XJOnClickListener clickListener=new XJOnClickListener() {
     public native String stringFromJNI();
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        cameraUtils.onActivityResult(requestCode,resultCode,data);
+
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         NetWorkStateUtil.getInstance(this).removeObserver(this);
 //        ButterKnife.unbind(this);
         EventManger.getInstance().removeObserver(mainE);
+        cameraUtils.ondetory();
     }
 
     @Override
@@ -196,4 +218,5 @@ private XJOnClickListener clickListener=new XJOnClickListener() {
 //            Log.e("thread","prepare-结束");
 //        }
 //    };
+
 }

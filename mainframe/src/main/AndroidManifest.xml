@@ -24,6 +24,8 @@
             android:configChanges="orientation|screenSize|keyboardHidden"/>
 
         <!--<service android:name=".base.InitializeService"/>-->
+        <activity android:name=".corp.CorpActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

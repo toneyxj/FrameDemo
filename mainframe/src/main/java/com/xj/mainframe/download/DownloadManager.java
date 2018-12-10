@@ -339,7 +339,7 @@ public class DownloadManager extends DMBase implements DownloadListener {
     private void setAlertDialog(String value) {
         if (alertDialog == null || !alertDialog.isshow()) {
             alertDialog = null;
-            alertDialog = new AlertDialog(context).builder(0)
+            alertDialog = new AlertDialog(context,0)
                     .setTitle("网络提示")
                     .setMsg(value);
             alertDialog.show();

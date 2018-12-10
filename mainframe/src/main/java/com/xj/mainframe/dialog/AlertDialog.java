@@ -40,11 +40,13 @@ public class AlertDialog {
     private AlertInterface alertInterface;
     private int code;
 
-    public AlertDialog(Context context) {
+    public AlertDialog(Context context,int code) {
         this.context = context;
         WindowManager windowManager = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
         display = windowManager.getDefaultDisplay();
+        builder(code);
+
     }
 
     /**
@@ -52,7 +54,7 @@ public class AlertDialog {
      * @param code 唯一标识
      * @return 返回一个创建的提示框
      */
-    public AlertDialog builder(int code) {
+    private AlertDialog builder(int code) {
         this.code=code;
         // 获取Dialog布局
         View view = LayoutInflater.from(context).inflate(

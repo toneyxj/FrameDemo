@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.xj.framedemo.MainActivity">
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,7 +37,6 @@
             android:layout_weight="1"
             android:text="切换4"/>
     </LinearLayout>
-
     <com.xj.mainframe.view.extendView.AlphaTextViewClick
         android:id="@+id/sample_text"
         android:layout_width="wrap_content"
@@ -85,13 +86,38 @@
                 android:text="测试button88888"/>
         </LinearLayout>
     </com.xj.mainframe.view.extendView.AlphaLinerLayout>
-    <com.xj.mainframe.view.otherView.TitleView
-        android:layout_width="match_parent"
-        android:background="@drawable/white"
-        android:layout_height="@dimen/title_dp">
         <com.xj.mainframe.view.BaseView.XJImageView
             android:id="@+id/imag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+    <com.xj.mainframe.view.otherView.TitleView
+        android:layout_width="match_parent"
+        android:background="@drawable/white"
+        android:layout_height="@dimen/title_dp">
     </com.xj.mainframe.view.otherView.TitleView>
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:paddingLeft="10dip"
+            android:singleLine="true"
+            android:textSize="18sp"
+            android:imeOptions="actionDone"/>
 </LinearLayout>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/back_color"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:paddingLeft="10dip"
+        android:singleLine="true"
+        android:textSize="18sp"
+        android:layout_alignParentBottom="true"
+        android:imeOptions="actionDone"/>
+</RelativeLayout>

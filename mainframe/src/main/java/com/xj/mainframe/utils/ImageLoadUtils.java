@@ -164,6 +164,7 @@ public class ImageLoadUtils {
 		bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
 		fileOutputStream.close();
 		path = sd + my;
+		APPLog.e("savepath",path);
 		ImageLoadUtils.recycleBitmap(bitmap);
 		return path;
 	}

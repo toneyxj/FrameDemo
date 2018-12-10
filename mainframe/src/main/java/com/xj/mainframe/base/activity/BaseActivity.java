@@ -7,6 +7,9 @@ import android.support.v4.app.FragmentManager;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.xj.applypermission.Acp;
+import com.xj.applypermission.AcpListener;
+import com.xj.applypermission.AcpOptions;
 import com.xj.mainframe.base.BaseUtils;
 import com.xj.mainframe.configer.ToastUtils;
 import com.xj.mainframe.listener.BaseActivityInterface;
@@ -86,6 +89,12 @@ public abstract class BaseActivity extends FragmentActivity implements BaseActiv
 
     //titleListener配置中
 
+    /**
+     * 权限请求
+     */
+    public void requestLimit(AcpListener listener, String... permissions) {
+        Acp.getInstance(this).request(new AcpOptions.Builder().setPermissions(permissions).build(), listener);
+    }
 
     @Override
     public void onClickBack() {
