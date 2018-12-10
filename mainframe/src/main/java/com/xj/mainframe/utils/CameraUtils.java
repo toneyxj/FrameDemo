@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static com.xj.mainframe.BaseApplication.context;
 
 /**
  * 相机工具类
@@ -111,7 +110,7 @@ public class CameraUtils implements AlertInterface, EventObserver {
     @Override
     public boolean onNegative(int code) {
         //相册
-        Acp.getInstance(context).request(new AcpOptions.Builder().setPermissions(LimitManager.READ_AND_WRITE_EXTERNAL_STORAGE).build(), new AcpListener() {
+        Acp.getInstance(activity).request(new AcpOptions.Builder().setPermissions(LimitManager.READ_AND_WRITE_EXTERNAL_STORAGE).build(), new AcpListener() {
             @Override
             public void onGranted() {
                 Intent intent4 = new Intent(
@@ -134,7 +133,7 @@ public class CameraUtils implements AlertInterface, EventObserver {
     @Override
     public boolean onPositive(int code) {
         //拍照
-        Acp.getInstance(context).request(new AcpOptions.Builder().setPermissions(LimitManager.CAMERA).build(), new AcpListener() {
+        Acp.getInstance(activity).request(new AcpOptions.Builder().setPermissions(LimitManager.CAMERA).build(), new AcpListener() {
             @Override
             public void onGranted() {
                 File file = new File(mTempPhotoPath);
@@ -159,7 +158,7 @@ public class CameraUtils implements AlertInterface, EventObserver {
      * @param uri
      */
     private void startCropActivity(Uri uri) {
-        String path = GetPathFromUri4kitkat.getPath(context, uri);
+        String path = GetPathFromUri4kitkat.getPath(activity, uri);
         APPLog.e("startCropActivity-path", path);
         CorpModel model = new CorpModel();
         model.setCorpWidth(cutRatioW).setCorpHeight(cutRatioH);
@@ -178,7 +177,7 @@ public class CameraUtils implements AlertInterface, EventObserver {
         switch (requestCode) {
             case StringUtils.PHOTO_ALBUM:// 相册
                 if (type == CremeType.NO) {
-                    String path = GetPathFromUri4kitkat.getPath(context, data.getData());
+                    String path = GetPathFromUri4kitkat.getPath(activity, data.getData());
 
                     setListener(path);
                 } else if (type == CremeType.Cut) {

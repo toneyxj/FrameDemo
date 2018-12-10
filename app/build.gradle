@@ -11,6 +11,7 @@ android {
         applicationId "com.xj.framedemo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -30,7 +31,7 @@ android {
             shrinkResources false
         }
         release {
-            minifyEnabled rootProject.ext.minifyEnabled
+            minifyEnabled true
             zipAlignEnabled true
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

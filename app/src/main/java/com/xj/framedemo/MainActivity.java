@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.xj.mainframe.configer.APPLog;
 import com.xj.mainframe.configer.ToastUtils;
+import com.xj.mainframe.download.Dinterface.DMBase;
 import com.xj.mainframe.eventBus.EventManger;
 import com.xj.mainframe.eventBus.EventObserver;
 import com.xj.mainframe.listener.AlertInterface;
@@ -16,7 +17,9 @@ import com.xj.mainframe.netState.NetChangeObserver;
 import com.xj.mainframe.netState.NetWorkStateUtil;
 import com.xj.mainframe.netState.NetWorkUtil;
 import com.xj.mainframe.utils.CameraUtils;
+import com.xj.mainframe.utils.SystemUtils;
 import com.xj.mainframe.view.BaseView.XJImageView;
+import com.xj.mainframe.webX5.BrowserActivity;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -43,14 +46,14 @@ public class MainActivity extends Activity implements NetChangeObserver,EventObs
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        urls.add("http://dlied5.myapp.com/myapp/1104466820/sgame/2017_com.tencent.tmgp.sgame_h178_1.41.2.16_5a7ef8.apk");
-//        urls.add("http://gdownyf.baijincdn.cn/data/wisegame/d3cfcbced1a50905/meituan_697.apk");
-//        urls.add("http://gdownyf.baijincdn.cn/data/wisegame/7755dede9585bf18/yingyongbao_7292130.apk");
-//        urls.add("http://gdownyf.baijincdn.cn/data/wisegame/6b9bb3afc505fdee/qichezhijia_965.apk");
-//        APPLog.e("SystemUtils.getCPUCoreNum()", SystemUtils.getCPUCoreNum());
-//        for (String url:urls) {
-//            DMBase.getInstance(this).addDownload(url);
-//        }
+        urls.add("http://dlied5.myapp.com/myapp/1104466820/sgame/2017_com.tencent.tmgp.sgame_h178_1.41.2.16_5a7ef8.apk");
+        urls.add("http://gdownyf.baijincdn.cn/data/wisegame/d3cfcbced1a50905/meituan_697.apk");
+        urls.add("http://gdownyf.baijincdn.cn/data/wisegame/7755dede9585bf18/yingyongbao_7292130.apk");
+        urls.add("http://gdownyf.baijincdn.cn/data/wisegame/6b9bb3afc505fdee/qichezhijia_965.apk");
+        APPLog.e("SystemUtils.getCPUCoreNum()", SystemUtils.getCPUCoreNum());
+        for (String url:urls) {
+            DMBase.getInstance(this).addDownload(url);
+        }
 
         cameraUtils=new CameraUtils(this, new CameraBackListener() {
             @Override
@@ -74,13 +77,13 @@ public class MainActivity extends Activity implements NetChangeObserver,EventObs
         (findViewById(R.id.click)).setOnClickListener(new XJOnClickListener() {
             @Override
             public void onclickView(View view) {
-                cameraUtils.startCamera();
+//                cameraUtils.startCamera();
 //                new AlertDialog(MainActivity.this).builder(0)
 //                        .setTitle("网络提示")
 //                        .setMsg("提示").show();
 //                startActivity(new Intent(MainActivity.this,TestEdite.class));
 //                startActivity(new Intent(MainActivity.this, ScrollingActivity.class));
-//                BrowserActivity.StartBrowser(MainActivity.this,"http://soft.imtt.qq.com/browser/tes/feedback.html",false);
+                BrowserActivity.StartBrowser(MainActivity.this,"http://soft.imtt.qq.com/browser/tes/feedback.html",false);
             }
         });
 

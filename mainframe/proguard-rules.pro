@@ -130,19 +130,10 @@
 -keepclasseswithmembernames class * {
     @butterknife.* <methods>;
 }
-#butterknife
--keep class butterknife.** { *; }
--dontwarn butterknife.internal.**
--keep class **$$ViewBinder { *; }
--keepclasseswithmembernames class * {
-    @butterknife.* <fields>;
-}
--keepclasseswithmembernames class * {
-    @butterknife.* <methods>;
-}
+
 ##butterknife-end
 
 #基本框架保持代码
--keep class com.xj.mainframe.**{*;}
+-keep class com.xj.applypermission.**{*;}
 
 -ignorewarnings

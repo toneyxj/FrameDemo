@@ -117,3 +117,48 @@
    public static *** i(...);
    public static *** w(...);
  }
+# 框架层混淆代码
+
+#fastjson混淆
+-keep class javax.ws.rs.** { *; }
+-dontwarn com.alibaba.fastjson.**
+-keep class com.alibaba.fastjson.** { *; }
+
+#okhttp混淆
+-dontwarn com.squareup.okhttp3.**
+-keep class com.squareup.okhttp3.** { *;}
+
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
+
+-keep class okio.** { *; }
+-keep interface okio.** { *; }
+-dontwarn okio.**
+
+##bugly混淆
+#-dontwarn com.tencent.bugly.**
+#-keep public class com.tencent.bugly.**{*;}
+
+#webX5混淆
+-dontwarn com.tencent.smtt.**
+-keep public class com.tencent.smtt.**{*;}
+
+#glide混淆
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+
+-dontwarn javax.annotation.**
+-keep class javax.annotation.** { *;}
+
+#框架层混淆代码结束-------------------------
+
+#其余混淆代码
+
+
+
+#忽略警告
+-ignorewarnings
